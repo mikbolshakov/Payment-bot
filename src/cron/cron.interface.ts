@@ -1,4 +1,4 @@
-// смысл крона - запуск какого-либо процесса в определенные промежутки времени
+// launching a process at certain intervals
 export interface ICronService {
   init(): Promise<void>;
 }

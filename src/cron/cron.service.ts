@@ -13,8 +13,8 @@ export class CronService implements ICronService {
   ) {}
 
   async init() {
-    // каждые 5 сек крон проходится по платежам, которые не isFinal, уточняет и обновляет статус
-    // 6 элементов (сек, мин, час, день и тд) - каждые 5 секунд у нас будет */5
+    // every 5 seconds cron goes through payments that are not isFinal, clarifies and updates the status
+    // of 6 elements (sec, min, hour, day, etc.) - every 5 seconds we will have */5
     cron.schedule("*/5 * * * * *", async () => {
       const payments = await this.databaseService.payment.findMany({
         where: {
@@ -24,7 +24,7 @@ export class CronService implements ICronService {
       for (const payment of payments) {
         const res = await this.cryptomusService.checkPayment(payment.uuid);
         if (!res) {
-          console.log("Ошибка");
+          console.log("Err");
           continue;
         }
         if (res.result.is_final) {

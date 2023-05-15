@@ -1,5 +1,5 @@
 import { Context } from "telegraf";
-// контекст сессии
+// session context
 export interface SessionData {
   isLike: boolean;
 }

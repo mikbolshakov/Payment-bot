@@ -12,7 +12,7 @@ export class CryptomusService implements ICryptomusService {
     this.merchantId = this.configService.get("CRYPTO_MERCHANT_ID");
   }
 
-  // шифрование подписи
+  // signature encryption
   getHeader(payload: string) {
     const sign = crypto
       .createHash("md5")
@@ -24,7 +24,7 @@ export class CryptomusService implements ICryptomusService {
     };
   }
 
-  // создание платежа
+  // create payment
   async createPayment(amount: number, orderId: string) {
     try {
       const payload = {
@@ -45,11 +45,11 @@ export class CryptomusService implements ICryptomusService {
     }
   }
 
-  // проверка платежа
+  // check payment
   async checkPayment(uuid: string): Promise<CreatePaymentResult | undefined> {
     try {
       const payload = {
-        uuid
+        uuid,
       };
       const { data } = await axios.post<CreatePaymentResult>(
         "https://api.cryptomus.com/v1/payment/info",

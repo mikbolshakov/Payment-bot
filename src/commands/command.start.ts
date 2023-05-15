@@ -17,11 +17,11 @@ export class StartCommand extends Command {
     this.bot.start(async (ctx) => {
       const res = await this.cryptomusService.createPayment(1, "10");
       if (!res) {
-        ctx.reply("Ошибка платежа");
+        ctx.reply("Payment error");
         return;
       }
       console.log(res);
-      // данные по платежу, пользователю и чату
+      // data on payment, user and chat
       await this.databaseService.payment.create({
         data: {
           uuid: res.result.uuid,
@@ -36,25 +36,25 @@ export class StartCommand extends Command {
       });
       ctx.reply(res.result.url);
 
-      // ctx - тг объект с разными функциями (которые мы видим в ботах)
+      // ctx - tg object with different functions (that we see in bots)
       ctx.reply(
-        "Все понравилось?",
+        "Everything is ok?",
         Markup.inlineKeyboard([
-          // Markup - разметка как будем отвечать (клавиатурой)
-          Markup.button.callback("Да!", "is_like"),
-          Markup.button.callback("Не особо...", "is_dislike"),
+          // Markup - how we will respond (by keyboard)
+          Markup.button.callback("Yep!", "is_like"),
+          Markup.button.callback("Not sure...", "is_dislike"),
         ])
       );
     });
 
     this.bot.action("is_like", (ctx) => {
       ctx.session.isLike = true;
-      ctx.editMessageText("Порядок, работаем.");
+      ctx.editMessageText("Alright, work.");
     });
 
     this.bot.action("is_dislike", (ctx) => {
       ctx.session.isLike = false;
-      ctx.editMessageText("Не порядок!");
+      ctx.editMessageText("Not ok!");
     });
   }
 }

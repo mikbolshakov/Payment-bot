@@ -12,7 +12,6 @@ import { IDataBase } from "./database/database.interface";
 import { DatabaseService } from "./database/database.service";
 
 // t.me/Payment_gh16_bot
-
 class Bot {
   bot: Telegraf<IBotContext>;
   commands: Command[] = [];
@@ -22,25 +21,31 @@ class Bot {
     private readonly databaseService: IDataBase,
     private readonly cryptomusService: ICryptomusService
   ) {
-    // прочитали конфиг
-    this.bot = new Telegraf<IBotContext>(this.configService.get("TOKEN")); // добавили бота с контекстом работы
-    this.bot.use(new LocalSession({ database: "sessions.json" }).middleware()); // добавили сессии
+    // read the config
+    this.bot = new Telegraf<IBotContext>(this.configService.get("TOKEN")); // added a bot with a work context
+    this.bot.use(new LocalSession({ database: "sessions.json" }).middleware()); // added sessions
   }
 
-  // команды и их обработка
+  // commands and their processing
   async init() {
-    await new CronService(this.databaseService, this.cryptomusService, this.bot).init()
-    await this.databaseService.init(); // подключение к бд
-    this.commands = [new StartCommand(this.bot, this.cryptomusService, this.databaseService)];
+    await new CronService(
+      this.databaseService,
+      this.cryptomusService,
+      this.bot
+    ).init();
+    await this.databaseService.init(); // connect to database
+    this.commands = [
+      new StartCommand(this.bot, this.cryptomusService, this.databaseService),
+    ];
     for (const command of this.commands) {
       command.handle();
     }
-    this.bot.launch(); // запустили бота
+    this.bot.launch();
   }
 }
 
 const config = new ConfigService();
-const cryptomusService = new CryptomusService(config)
+const cryptomusService = new CryptomusService(config);
 const database = new DatabaseService();
 const bot = new Bot(config, database, cryptomusService);
 bot.init();
