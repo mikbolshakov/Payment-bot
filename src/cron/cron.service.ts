@@ -1,21 +1,21 @@
-import { Telegraf } from "telegraf";
-import { IBotContext } from "../context/context.interface";
-import { ICryptomusService } from "../crypto/cryptomus.interface";
-import { IDataBase } from "../database/database.interface";
-import { ICronService } from "./cron.interface";
-import cron from "node-cron";
+import { Telegraf } from 'telegraf';
+import { IBotContext } from '../context/context.interface';
+import { ICryptomusService } from '../crypto/cryptomus.interface';
+import { IDataBase } from '../database/database.interface';
+import { ICronService } from './cron.interface';
+import cron from 'node-cron';
 
 export class CronService implements ICronService {
   constructor(
     private readonly databaseService: IDataBase,
     private readonly cryptomusService: ICryptomusService,
-    private readonly bot: Telegraf<IBotContext>
+    private readonly bot: Telegraf<IBotContext>,
   ) {}
 
   async init() {
     // every 5 seconds cron goes through payments that are not isFinal, clarifies and updates the status
     // of 6 elements (sec, min, hour, day, etc.) - every 5 seconds we will have */5
-    cron.schedule("*/5 * * * * *", async () => {
+    cron.schedule('*/5 * * * * *', async () => {
       const payments = await this.databaseService.payment.findMany({
         where: {
           isFinal: false,
@@ -24,7 +24,7 @@ export class CronService implements ICronService {
       for (const payment of payments) {
         const res = await this.cryptomusService.checkPayment(payment.uuid);
         if (!res) {
-          console.log("Err");
+          console.log('Err');
           continue;
         }
         if (res.result.is_final) {

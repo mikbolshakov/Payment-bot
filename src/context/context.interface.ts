@@ -1,4 +1,5 @@
-import { Context } from "telegraf";
+import { Context } from 'telegraf';
+
 // session context
 export interface SessionData {
   isLike: boolean;

@@ -1,5 +1,5 @@
-import { config, DotenvParseOutput } from "dotenv";
-import { IConfigService } from "./config.interface";
+import { config, DotenvParseOutput } from 'dotenv';
+import { IConfigService } from './config.interface';
 
 // configuration service: read the env file, return the desired value from the key
 export class ConfigService implements IConfigService {
@@ -8,10 +8,10 @@ export class ConfigService implements IConfigService {
   constructor() {
     const { error, parsed } = config();
     if (error) {
-      throw new Error(".env file not found");
+      throw new Error('.env file not found');
     }
     if (!parsed) {
-      throw new Error("Empty .env file");
+      throw new Error('Empty .env file');
     }
     this.config = parsed;
   }
@@ -19,7 +19,7 @@ export class ConfigService implements IConfigService {
   get(key: string): string {
     const res = this.config[key];
     if (!res) {
-      throw new Error("No such key");
+      throw new Error('No such key');
     }
     return res;
   }

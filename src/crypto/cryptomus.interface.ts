@@ -1,9 +1,6 @@
 // interface for working with payments
 export interface ICryptomusService {
-  createPayment(
-    amount: number,
-    orderId: string
-  ): Promise<CreatePaymentResult | undefined>;
+  createPayment(amount: number, orderId: string): Promise<CreatePaymentResult | undefined>;
   checkPayment(uuid: string): Promise<CreatePaymentResult | undefined>;
   getHeader(payload: string): { sign: string; merchant: string };
 }
